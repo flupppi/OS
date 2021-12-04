@@ -20,14 +20,14 @@ indent_mode=2
 [project]
 name=banker
 base_path=/home/flupppi/dev/OS/bankers
+description=
 
 [long line marker]
 long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=1784;C++;0;EUTF-8;1;1;0;%2Fhome%2Fflupppi%2Fdev%2FOS%2Fbankers%2Fbankers.cpp;0;4
+current_page=-1
 
 [VTE]
 last_dir=/home/flupppi/dev/OS/bankers
