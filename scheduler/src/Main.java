@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
 //    #TODO 1. Create a linked list with 10 objects. Each object will represent a process. At the beginning, all objects are basically empty (Null).
         LinkedList<Process> prcs = new LinkedList<Process>();
+
         prcs.add(null);
         prcs.add(null);
         prcs.add(null);
@@ -18,11 +19,8 @@ public class Main {
         prcs.add(null);
         prcs.add(null);
         prcs.add(null);
-        // Debug line
-        Iterator itr = prcs.iterator();
-        while(itr.hasNext()) {
-            System.out.println(itr.next());
-        }
+
+        printProcesses(prcs);
         try {
             File myObj = new File("/home/flupppi/IdeaProjects/OS/scheduler/processes.txt");
             Scanner myReader = new Scanner(myObj);
@@ -43,24 +41,9 @@ public class Main {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        Iterator itr2 = prcs.iterator();
-        while(itr2.hasNext()) {
-            System.out.println(itr2.next());
-        }
-
-        Collections.sort(prcs, new Comparator<Process>() {
-            @Override
-            public int compare(Process o1, Process o2) {
-                Process temp = o1;
-                return Collator.getInstance().compare(temp.name, o2.name);
-            }
-        });
-        System.out.println(" ");
-        Iterator itr3 = prcs.iterator();
-        while(itr3.hasNext()) {
-            System.out.println(itr3.next());
-        }
-
+        printProcesses(prcs);
+        sortProcessesByName(prcs);
+        printProcesses(prcs);
 
 
         System.out.println("Please enter execution time in seconds and Process Name: 30 a");
@@ -73,6 +56,24 @@ public class Main {
 
         // closing scanner
           in.close();
+    }
+
+    private static void printProcesses(LinkedList<Process> prcs) {
+        System.out.println(" ");
+        Iterator itr = prcs.iterator();
+        while(itr.hasNext()) {
+            System.out.println(itr.next());
+        }
+    }
+
+    private static void sortProcessesByName(LinkedList<Process> prcs) {
+        Collections.sort(prcs, new Comparator<Process>() {
+            @Override
+            public int compare(Process o1, Process o2) {
+                Process temp = o1;
+                return Collator.getInstance().compare(temp.name, o2.name);
+            }
+        });
     }
 }
 
@@ -97,11 +98,11 @@ have the following:
 
      #TODO 6. When a process is finished executing, the process should be deleted, and the process ID can be used again for a later process.
 
-     #TODO 7. If the queue is empty (i.e., no process is available), the scheduler should check periodically (every 5 second) if there are any new processes.txt.
+     #TODO 7. If the queue is empty (i.e., no process is available), the scheduler should check periodically (every 5 second) if there are any new processes.
 
-     #TODO 8. In order to avoid process starvation, a process that remains at the tail of the queue while creating 3 new processes.txt should be moved to the head of the queue.
+     #TODO 8. In order to avoid process starvation, a process that remains at the tail of the queue while creating 3 new processes should be moved to the head of the queue.
 
      #TODO 9. Bonus (5 points): The scheduler above is non-preemptive (once a process starts execution, it remains active until it is done). A
 
-     #TODO 5 points bonus will be awarded if you get the scheduler to be preemptive (i.e., if a new process with higher priority is created while a process is currently running, context switch needs to be done).
+     #TODO A 5 points bonus will be awarded if you get the scheduler to be preemptive (i.e., if a new process with higher priority is created while a process is currently running, context switch needs to be done).
 */
