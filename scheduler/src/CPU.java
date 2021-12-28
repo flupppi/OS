@@ -39,6 +39,7 @@ public class CPU {
                     assignedProcess = null; // loosing the reference to an object automatically deletes it through the garbage collector.
                     // 5. When the process is finished, your scheduler should extract the next process from the linked list, and so on.
                     lookForProcess.run();
+                    Main.insertionCounter--;
                 }
             }, assignedProcess.time * 1000L);
             System.out.println("The Process " + assignedProcess.name + " has been assigned for " + assignedProcess.time + " seconds.");

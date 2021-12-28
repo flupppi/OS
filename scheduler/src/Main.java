@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.Collator;
 import java.util.*;
 
@@ -15,6 +13,7 @@ import java.util.*;
 public class Main {
     static boolean runProcess = true;
     static LinkedList<Process> prcs = new LinkedList<>();
+    static int insertionCounter = 0;
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -48,20 +47,25 @@ public class Main {
                 Process pcs = new Process(time, name);
                 System.out.println(pcs);
                 insertProcess(pcs);
-                if(prcs.size() > 1)  //3. Sort the created processes into a queue (linked list) based on the process name (i.e., sort alphabetically).
-                    sortProcessesByName();
-
+                  //3. Sort the created processes into a queue (linked list) based on the process name (i.e., sort alphabetically).
+                sortProcessesByName();
+                insertionCounter++;
+                if(insertionCounter>4){
+                    // 8. In order to avoid process starvation, a process that remains at the tail of the queue while creating 3 new processes should be moved to the head of the queue.
+                    swapOldProcess();
+                    insertionCounter=0;
+                }
             }
             else if (in.hasNext("end")){
                 in.nextLine();
                 runProcess = false;
                 // closing scanner
                 in.close();
+                System.exit(0);
             }
             else if (in.hasNext("print")) {
                 in.nextLine();
                 printProcesses();
-
             }
             else if (in.hasNext("help")){
                 in.nextLine();
@@ -70,8 +74,6 @@ public class Main {
             else{
                 in.nextLine();
             }
-
-
         }
     }
 
@@ -86,7 +88,6 @@ public class Main {
             prcs.set(i, pcs);
         else
             prcs.addLast(pcs);
-
     }
     private static void printProcesses() {
         System.out.println("Linked List Print");
@@ -102,10 +103,22 @@ public class Main {
             return 0;
         });
     }
+    private static void swapOldProcess(){
+        Iterator<Process> itr = prcs.iterator();
+        int i = 0;
+        while(itr.hasNext()&&prcs.get(i)!=null) {
+            i++;
+            itr.next();
+        }
+        if (i>3) {
+            Process first = prcs.getFirst();
+            Process last = prcs.get(i-1);
+            prcs.set(0, last);
+            prcs.set(i-1, first);
+        }
+    }
 }
 /* What i didn't do
-     #TODO 8. In order to avoid process starvation, a process that remains at the tail of the queue while creating 3 new processes should be moved to the head of the queue.
-
      #TODO 9. Bonus (5 points): The scheduler above is non-preemptive (once a process starts execution, it remains active until it is done). A
 
      #TODO A 5 points bonus will be awarded if you get the scheduler to be preemptive (i.e., if a new process with higher priority is created while a process is currently running, context switch needs to be done).
