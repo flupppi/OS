@@ -3,103 +3,107 @@ import java.io.FileNotFoundException;
 import java.text.Collator;
 import java.util.*;
 
+/**
+ * Operating Systems Coding Assignments
+ * Coding Assignment 1: Process Scheduling
+ * Due on Thursday December 30
+ * Write a program that implements a process scheduler based on priority.
+ * Author: Felix Kalchschmid - s20211051
+ * Each of the subtasks I did is marked with a comment inside the file.
+ */
+
 public class Main {
+    static boolean runProcess = true;
+    static LinkedList<Process> prcs = new LinkedList<>();
 
     public static void main(String[] args) {
-//    #TODO 1. Create a linked list with 10 objects. Each object will represent a process. At the beginning, all objects are basically empty (Null).
-        LinkedList<Process> prcs = new LinkedList<Process>();
-
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-        prcs.add(null);
-
-        printProcesses(prcs);
-        try {
-            File myObj = new File("/home/flupppi/IdeaProjects/OS/scheduler/processes.txt");
-            Scanner myReader = new Scanner(myObj);
-            int i = 0;
-            while (myReader.hasNextLine()) {
-
-                int time = myReader.nextInt();
-                System.out.println("You entered time: " + time);
-                String name = myReader.next();
-                System.out.println("You entered name: " + name);
-                Process pcs = new Process(time, name);
-                System.out.println(pcs.toString());
-                prcs.set(i,pcs);
-                i++;
-                   }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        printProcesses(prcs);
-        sortProcessesByName(prcs);
-        printProcesses(prcs);
-
-
-        System.out.println("Please enter execution time in seconds and Process Name: 30 a");
-        // Using Scanner for Getting Input from User
         Scanner in = new Scanner(System.in);
-        int a = in.nextInt();
-        System.out.println("You entered integer " + a);
-        String s = in.next();
-        System.out.println("You entered string " + s);
+        CPU cpu = new CPU();
+//     1. Create a linked list with 10 objects. Each object will represent a process. At the beginning, all objects are basically empty (Null).
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        prcs.add(null);
+        printProcesses();
+        System.out.println("Type: \n end -> finish input \n stop -> stop the program \n print -> print the process queue \n duration name -> to create a process");
+        System.out.println("Please enter the execution time in seconds and a process Name: 30 a");
+        cpu.timerInit();
+        while(runProcess) { // kontrollstruktur
+            // Input Loop
+            // Using Scanner for Getting Input from User
+            if (in.hasNextInt()) {
+                // 2. Process creation: when creating a process, the program should ask for the process name and duration,
+                // then your program should assign an ID to the process that is different than all current processes available.
+                // (Hint: to make it easier to work with next steps, let the duration of the process be around 30 seconds).
+                int time = in.nextInt();
+                //System.out.println("You entered time: " + time);
+                String name = in.next();
+                //System.out.println("You entered name: " + name);
+                Process pcs = new Process(time, name);
+                System.out.println(pcs);
+                insertProcess(pcs);
+                if(prcs.size() > 1)  //3. Sort the created processes into a queue (linked list) based on the process name (i.e., sort alphabetically).
+                    sortProcessesByName();
 
-        // closing scanner
-          in.close();
-    }
+            }
+            else if (in.hasNext("end")){
+                in.nextLine();
+                runProcess = false;
+                // closing scanner
+                in.close();
+            }
+            else if (in.hasNext("print")) {
+                in.nextLine();
+                printProcesses();
 
-    private static void printProcesses(LinkedList<Process> prcs) {
-        System.out.println(" ");
-        Iterator itr = prcs.iterator();
-        while(itr.hasNext()) {
-            System.out.println(itr.next());
+            }
+            else if (in.hasNext("help")){
+                in.nextLine();
+                System.out.println("Type: \n end -> finish input \n stop -> stop the program \n print -> print the process queue \n duration name -> to create a process");
+            }
+            else{
+                in.nextLine();
+            }
+
+
         }
     }
 
-    private static void sortProcessesByName(LinkedList<Process> prcs) {
-        Collections.sort(prcs, new Comparator<Process>() {
-            @Override
-            public int compare(Process o1, Process o2) {
-                Process temp = o1;
-                return Collator.getInstance().compare(temp.name, o2.name);
+    private static void insertProcess(Process pcs){
+        Iterator<Process> itr = prcs.iterator();
+        int i = 0;
+        while(itr.hasNext()&&prcs.get(i)!=null) {
+            i++;
+            itr.next();
+        }
+        if(prcs.size()>i)
+            prcs.set(i, pcs);
+        else
+            prcs.addLast(pcs);
+
+    }
+    private static void printProcesses() {
+        System.out.println("Linked List Print");
+        for (Process prc : prcs) {
+            System.out.println(prc);
+        }
+    }
+    private static void sortProcessesByName() {
+        prcs.sort((o1, o2) -> {
+            if (o1 != null && o2 != null) {
+                return Collator.getInstance().compare(o1.name, o2.name);
             }
+            return 0;
         });
     }
 }
-
-
-    /**
-     *Operating Systems Coding Assignments
-Coding Assignment 1: Process Scheduling
-Due on Thursday December 30
-Write a program that implements a process scheduler based on priority. Your program should
-have the following:
-
-
-     #TODO 2. Process creation: when creating a process, the program should ask for the process name and duration, then your program should assign an ID to the process that is different than all current processes available. (Hint: to make it easier to work with next steps, let the duration of the process be around 30 seconds).
-
-
-
-     #TODO 3. Sort the created processes into a queue (linked list) based on the process name (i.e., sort alphabetically).
-
-     #TODO 4. The program should extract the process at the head of the queue and assign to the CPU (virtual one, not physically assign it) for the duration specified in the process.
-
-     #TODO 5. When the process is finished, your scheduler should extract the next process from the linked list, and so on.
-
-     #TODO 6. When a process is finished executing, the process should be deleted, and the process ID can be used again for a later process.
-
-     #TODO 7. If the queue is empty (i.e., no process is available), the scheduler should check periodically (every 5 second) if there are any new processes.
-
+/* What i didn't do
      #TODO 8. In order to avoid process starvation, a process that remains at the tail of the queue while creating 3 new processes should be moved to the head of the queue.
 
      #TODO 9. Bonus (5 points): The scheduler above is non-preemptive (once a process starts execution, it remains active until it is done). A
