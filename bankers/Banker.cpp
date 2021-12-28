@@ -23,7 +23,7 @@ class Process{
 	// Variables
  int pId;
  bool finished;
- map<char, int> resourcesRequirement>;
+ map<char, int> resourcesRequirement;
  map<char, int> maxRequirement;
  map<char, int> allocation;
  public:
