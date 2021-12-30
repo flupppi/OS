@@ -28,7 +28,7 @@ import java.util.Scanner;
 a.Available = (0, 3, 0, 1) - unsafe
 b.Available = (1, 0, 0, 2) - safe
  */
-class Bankers {
+class Main {
     static int NUMBER_OF_RESOURCES;
     static int NUMBER_OF_PROCESSES;
     static int[] safeSequence = new int[20];
